@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Scope;
 @Configuration
 public class MainConfigForCap1 {
 
-    @Bean("person")
+    @Bean("person2")
     //默认单实例
     @Scope("prototype")
     @Lazy

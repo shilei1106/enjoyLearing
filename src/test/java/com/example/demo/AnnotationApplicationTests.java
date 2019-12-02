@@ -1,14 +1,24 @@
 package com.example.demo;
 
+import com.example.demo.spring.annotation.applicationContextAware.MainConfig7;
+import com.example.demo.spring.annotation.applicationContextAware.Plane;
 import com.example.demo.spring.annotation.cap1.MainConfigForCap1;
 import com.example.demo.spring.annotation.cap1.Person;
 import com.example.demo.spring.annotation.cap2.MainConfig;
 import com.example.demo.spring.annotation.cap3.MyAnnotationType;
+import com.example.demo.spring.annotation.cap5.MainConfig5;
+import com.example.demo.spring.annotation.cap6.MainConfig6;
+import com.example.demo.spring.aop.AopMainConfig1;
+import com.example.demo.spring.aop.service.Service1;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.sql.SQLOutput;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * //@ComponentScan value:指定要扫描的包
@@ -30,6 +40,7 @@ class AnnotationApplicationTests {
      */
     @Test
     void test1() {
+
         //获取上下文
         ApplicationContext app = new ClassPathXmlApplicationContext("beans.xml");
         Person person = (Person)app.getBean("person");
@@ -63,14 +74,63 @@ class AnnotationApplicationTests {
     }
     /**
      * 单实例和多实例（scope）   /   懒加载 lazy
-     *默认单实例，可配置多实例；多实例默认懒加载，单实例默认
+     *默认单实例，可配置多实例；多实例默认懒加载，单实例默认构造容器时加载
      */
     @Test
     void test4(){
         ApplicationContext app = new AnnotationConfigApplicationContext(MainConfigForCap1.class);
         Object o1 = app.getBean("person");
         Object o2 = app.getBean("person");
-        System.out.println(o1.equals(o2));
+        System.out.println(o1.equals(o2));//单例true   多例false
+    }
+
+    /**
+     * @condition
+     */
+    @Test
+    void test5(){
+        AnnotationConfigApplicationContext anno = new AnnotationConfigApplicationContext(MainConfig5.class);
+        //到容器中拿到所有bean
+        String[] beanNamesForTypes = anno.getBeanNamesForType(Person.class);
+        String osName = anno.getEnvironment().getProperty("os.name");
+        System.out.println("当前操作系统是"+osName);
+        //输出所有bean
+        for(String s:beanNamesForTypes){
+            System.out.println("所有bean之一："+s);
+        }
+        //打印出所有bean 放到map种
+        Map<String,Person> personMap = anno.getBeansOfType(Person.class);
+        System.out.println(osName+"aaaaaaaaaaaaaaa:"+personMap);
+    }
+    /**
+     * @Import
+     */
+    @Test
+    void test6(){
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(MainConfig6.class);
+        String[] names = applicationContext.getBeanDefinitionNames();
+        for(String name:names){
+            System.out.println(name);
+        }
+    }
+    /**
+     * @Post
+     */
+    @Test
+    void test7(){
+    ApplicationContext app = new AnnotationConfigApplicationContext(MainConfig7.class);
+    Plane plane =(Plane)app.getBean("plane");
+        System.out.println(plane);
+    }
+    /**
+     * aop
+     */
+    @Test
+    void test8(){
+        ApplicationContext app = new AnnotationConfigApplicationContext(AopMainConfig1.class);
+        Service1 service1 = app.getBean(Service1.class);
+        int result = service1.div(1,1);
+        System.out.println(result);
     }
 
 }
