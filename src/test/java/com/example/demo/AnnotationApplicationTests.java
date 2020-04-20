@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import clclicby.FooBar;
 import com.example.demo.spring.annotation.applicationContextAware.MainConfig7;
 import com.example.demo.spring.annotation.applicationContextAware.Plane;
 import com.example.demo.spring.annotation.cap1.MainConfigForCap1;
@@ -132,5 +133,22 @@ class AnnotationApplicationTests {
         int result = service1.div(1,1);
         System.out.println(result);
     }
-
+    @Test
+    void test(){
+        FooBar fooBar = new FooBar(5);
+        try {
+            fooBar.foo(()->{
+                System.out.print("foot");
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+//        try {
+//            fooBar.bar(()->{
+//                System.out.println("bar");
+//            });
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+    }
 }
